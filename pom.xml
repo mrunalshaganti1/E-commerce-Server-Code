@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.selflearning</groupId>
-	<artifactId>ecommerce-full-stack-1</artifactId>
+	<artifactId>E-Commerce-Java-Full-Stack--Backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ecommerce-full-stack-1</name>
+	<name>E-Commerce-Java-Full-Stack--Backend</name>
 	<description>Ecommerce Full Stack with Java</description>
 	<properties>
 		<java.version>17</java.version>
