@@ -39,8 +39,6 @@ public class PaymentController {
 	@Autowired
 	private OrderService orderService;
 	
-	@Autowired
-	private UserService userService;
 	
 	@Autowired
 	private OrderRepository orderRepository;
