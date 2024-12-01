@@ -15,7 +15,7 @@
 	<description>Ecommerce Full Stack with Java</description>
 	<properties>
 		<java.version>17</java.version>
-		<start-class>com.selflearning.Application</start-class>
+		<start-class>com.selflearning.EcommerceFullStack1Application</start-class>
 	</properties>
 	<dependencies>
 		<dependency>
