@@ -7,3 +7,4 @@ public class JwtConstant {
     public static final String SECRET_KEY = Base64.getEncoder().encodeToString("starkindustries2024supersecurekey".getBytes());
     public static final String JWT_HEADER = "Authorization";
 }
+ 
