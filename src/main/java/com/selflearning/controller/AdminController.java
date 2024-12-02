@@ -2,10 +2,12 @@ package com.selflearning.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,5 +68,21 @@ public class AdminController {
 			e.printStackTrace();
 			return ResponseEntity.status(500).body("No product with that Id");
 		}
+	}
+	
+	@PutMapping("/{productId}/update")
+	public ResponseEntity<Product> updateProduct(@RequestBody Product requestProduct, @PathVariable Long productId) throws ProductException{
+		
+		Product product = productService.updateProduct(productId, requestProduct);
+		return new ResponseEntity<Product>(product, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/createmultipleproducts")
+	public ResponseEntity<String> createMultipleProduct(@RequestBody CreateProductRequest[] requestProducts){
+		for(CreateProductRequest product: requestProducts){
+			productService.createProduct(product);
+		}
+		
+		return new ResponseEntity<String>("Products Successfully Added!!", HttpStatus.CREATED);
 	}
 }

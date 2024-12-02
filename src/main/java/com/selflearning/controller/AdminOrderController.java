@@ -16,7 +16,7 @@ import com.selflearning.model.Order;
 import com.selflearning.service.OrderService;
 
 @RestController
-@RequestMapping("/admin/orders")
+@RequestMapping("/api/admin/orders")
 public class AdminOrderController {
 
 	@Autowired

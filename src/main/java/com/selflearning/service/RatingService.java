@@ -10,5 +10,5 @@ import com.selflearning.request.RatingRequest;
 public interface RatingService {
 
 	public Rating createRating(RatingRequest request, User user) throws ProductException;
-	public List<Rating> getProducts(Long productId);
+	public List<Rating> getProductsRatings(Long productId);
 }
