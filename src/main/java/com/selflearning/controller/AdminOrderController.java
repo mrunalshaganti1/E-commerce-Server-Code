@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,7 @@ public class AdminOrderController {
 		return new ResponseEntity<List<Order>>(allOrders,HttpStatus.OK);
 	}
 	
-	@GetMapping("/{orderId}/confirmed")
+	@PutMapping("/{orderId}/confirmed")
 	public ResponseEntity<Order> confirmedOrderHandler(@RequestHeader("Authorization") String jwt, @PathVariable Long orderId) throws OrderException{
 		
 		Order order = orderService.confirmedOrder(orderId);
@@ -37,7 +38,7 @@ public class AdminOrderController {
 		return new ResponseEntity<Order>(order,HttpStatus.OK);
 	}
 	
-	@GetMapping("/{orderId}/shippedOrder")
+	@PutMapping("/{orderId}/shippedOrder")
 	public ResponseEntity<Order> shippedOrderHandler(@RequestHeader("Authorization") String jwt, @PathVariable Long orderId) throws OrderException{
 		
 		Order order = orderService.shippedOrder(orderId);
@@ -45,7 +46,7 @@ public class AdminOrderController {
 		return new ResponseEntity<Order>(order,HttpStatus.OK);
 	}
 	
-	@GetMapping("/{orderId}/deliveredOrder")
+	@PutMapping("/{orderId}/deliveredOrder")
 	public ResponseEntity<Order> deliveredOrderHandler(@RequestHeader("Authorization") String jwt, @PathVariable Long orderId) throws OrderException{
 		
 		Order order = orderService.deliveredOrder(orderId);
@@ -53,7 +54,7 @@ public class AdminOrderController {
 		return new ResponseEntity<Order>(order,HttpStatus.OK);
 	}
 	
-	@GetMapping("/{orderId}/cancledOrder")
+	@PutMapping("/{orderId}/cancledOrder")
 	public ResponseEntity<Order> cancledOrderHandler(@RequestHeader("Authorization") String jwt, @PathVariable Long orderId) throws OrderException{
 		
 		Order order = orderService.cancledOrder(orderId);

@@ -160,7 +160,7 @@ public class OrderServiceImplementation implements OrderService{
 		// TODO Auto-generated method stub
 		Order order = findOneById(orderId);
 		
-		orderItemRepository.deleteById(order.getId());
+		orderRepository.deleteById(order.getId());
 		
 		return "Order Deleted Successfully";
 	}
