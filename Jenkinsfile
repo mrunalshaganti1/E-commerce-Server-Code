@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+    	DOCKER_HOST = "tcp://host.docker.internal:2375"
         DOCKER_IMAGE = "mrunal616/e-commerce-fullstack-backend-server"
     }
 
