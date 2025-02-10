@@ -12,10 +12,10 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image (Host Machine)') {
+        stage('Build Docker Image on Host') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE}:latest ."
+                    sh "export DOCKER_HOST=tcp://host.docker.internal:2375 && docker build -t ${DOCKER_IMAGE}:latest ."
                 }
             }
         }
@@ -26,9 +26,7 @@ pipeline {
             }
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-                        sh "docker push ${DOCKER_IMAGE}:latest"
-                    }
+                    sh "export DOCKER_HOST=tcp://host.docker.internal:2375 && docker push ${DOCKER_IMAGE}:latest"
                 }
             }
         }
@@ -36,7 +34,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    sh "kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
+                    sh "export DOCKER_HOST=tcp://host.docker.internal:2375 && kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
                 }
             }
         }
