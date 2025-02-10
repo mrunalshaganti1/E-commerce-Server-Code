@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-    	DOCKER_HOST = "tcp://host.docker.internal:2375"
         DOCKER_IMAGE = "mrunal616/e-commerce-fullstack-backend-server"
     }
 
@@ -16,7 +15,7 @@ pipeline {
         stage('Build Docker Image on Host') {
             steps {
                 script {
-                    sh "export DOCKER_HOST=tcp://host.docker.internal:2375 && docker build -t ${DOCKER_IMAGE}:latest ."
+                    sh "docker build -t ${DOCKER_IMAGE}:latest ."
                 }
             }
         }
@@ -27,7 +26,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "export DOCKER_HOST=tcp://host.docker.internal:2375 && docker push ${DOCKER_IMAGE}:latest"
+                    sh "docker push ${DOCKER_IMAGE}:latest"
                 }
             }
         }
