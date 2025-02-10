@@ -34,7 +34,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    sh "export DOCKER_HOST=tcp://host.docker.internal:2375 && kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
+                    sh "kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
                 }
             }
         }
