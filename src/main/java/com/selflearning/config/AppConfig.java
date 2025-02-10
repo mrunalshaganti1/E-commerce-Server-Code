@@ -40,10 +40,12 @@ public class AppConfig {
 
                     cfg.setAllowedOrigins(Arrays.asList(
                         "http://localhost:3000",
+                        "http://localhost:30001",
                         "http://localhost:4200",
+                        "http://frontend.myapp.com",
                         "https://fullstackecommerce.vercel.app/"
                     ));
-
+                    cfg.setAllowedOriginPatterns(Collections.singletonList("*"));
                     cfg.setAllowedMethods(Collections.singletonList("*"));
                     cfg.setAllowCredentials(true);
                     cfg.setAllowedHeaders(Collections.singletonList("*"));

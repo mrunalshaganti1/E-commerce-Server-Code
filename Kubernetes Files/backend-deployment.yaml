@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: server
+        image: mrunal616/e-commerce-fullstack-backend-server:latest
+        ports:
+        - containerPort: 5454
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://mysqldb:3306/ecommerce_fullstack
+        - name: SPRING_DATASOURCE_USERNAME
+          value: root
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: root
+        - name: SERVER_PORT
+          value: "5454"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+spec:
+  selector:
+    app: server
+  ports:
+    - protocol: TCP
+      port: 5454
+      targetPort: 5454
+  type: ClusterIP

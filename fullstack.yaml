@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  server:
+    build:
+      context: .
+    restart: always
+    ports:
+      - 5454:5454
+    depends_on:
+      - mysqldb
+    networks:
+      - backend_network
+  mysqldb:
+    image: "mysql:latest"
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: ecommerce_fullstack
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - backend_network
+  frontend:
+    build:
+      context: D:/Projects/full-stack-java
+    restart: always
+    ports:
+      - 3001:80
+    depends_on:
+      - server
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    driver: bridge
