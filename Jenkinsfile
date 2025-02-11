@@ -16,12 +16,17 @@ pipeline {
 		    steps {
 		        script {
 		            sh '''
-		            docker run --rm -v "$PWD":/workspace -w /workspace \
-		            maven:3.8.5-openjdk-17 mvn clean package -DskipTests
+		            ls -la  # Debug: Check if pom.xml exists
+		            docker run --rm \
+		            -v "$(pwd):/workspace" \
+		            -w /workspace \
+		            maven:3.8.5-openjdk-17 \
+		            mvn clean package -DskipTests
 		            '''
 		        }
 		    }
 		}
+
 
         stage('Build Docker Image') {
             steps {
