@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.8.5-openjdk-17'  // Use a Maven + Java image
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     environment {
         DOCKER_IMAGE = "mrunal616/e-commerce-fullstack-backend-server"
@@ -9,6 +14,15 @@ pipeline {
         stage('Checkout Source Code') {
             steps {
                 git 'https://github.com/mrunalshaganti1/E-commerce-Server-Code.git'
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                script {
+                    sh 'mvn clean package -DskipTests'  // Build the JAR file
+                    sh 'mvn test'  // Run tests
+                }
             }
         }
 
