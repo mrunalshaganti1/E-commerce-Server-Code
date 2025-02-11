@@ -18,8 +18,8 @@ pipeline {
 		            sh '''
 		            ls -la  # Debugging: Check if pom.xml exists
 		            docker run --rm \
-		            -v "$(pwd | sed 's/ /\\\\ /g'):/workspace" \
-		            -w /workspace \
+		            -v "$(pwd)":"/workspace" \
+		            -w "/workspace" \
 		            maven:3.8.5-openjdk-17 \
 		            mvn clean package -DskipTests
 		            '''
