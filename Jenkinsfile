@@ -16,9 +16,9 @@ pipeline {
 		    steps {
 		        script {
 		            sh '''
-		            ls -la  # Debug: Check if pom.xml exists
+		            ls -la  # Debugging: Check if pom.xml exists
 		            docker run --rm \
-		            -v "$(pwd):/workspace" \
+		            -v "$(pwd | sed 's/ /\\\\ /g'):/workspace" \
 		            -w /workspace \
 		            maven:3.8.5-openjdk-17 \
 		            mvn clean package -DskipTests
@@ -26,7 +26,6 @@ pipeline {
 		        }
 		    }
 		}
-
 
         stage('Build Docker Image') {
             steps {
