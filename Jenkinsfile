@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.5-openjdk-17'  // Use a Maven + Java image
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any  // Use the Jenkins host machine instead of a Docker agent
 
     environment {
         DOCKER_IMAGE = "mrunal616/e-commerce-fullstack-backend-server"
@@ -20,7 +15,7 @@ pipeline {
         stage('Build and Test') {
             steps {
                 script {
-                    sh 'mvn clean package -DskipTests'  // Build the JAR file
+                    sh 'mvn clean package -DskipTests'  // Build JAR file
                     sh 'mvn test'  // Run tests
                 }
             }
