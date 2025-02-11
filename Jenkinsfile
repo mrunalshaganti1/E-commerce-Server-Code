@@ -18,15 +18,15 @@ pipeline {
 		            sh '''
 		            # Debugging: Print current directory
 		            echo "Current directory: $(pwd)"
-		            
+		
 		            # Ensure POM exists before running Maven
-		            ls -la $(pwd)
-		            
-		            # Use absolute path for Windows compatibility
-		            WORKSPACE_DIR=$(pwd)
-		            
+		            ls -la "$(pwd)"
+		
+		            # Use absolute path for Windows compatibility and properly handle spaces
+		            WORKSPACE_DIR="$(pwd)"
+		
 		            docker run --rm \
-		            -v "$WORKSPACE_DIR:/workspace" \
+		            -v "${WORKSPACE_DIR}:/workspace" \
 		            -w "/workspace" \
 		            maven:3.8.5-openjdk-17 \
 		            mvn clean package -DskipTests
@@ -34,6 +34,7 @@ pipeline {
 		        }
 		    }
 		}
+
 
         stage('Build Docker Image') {
             steps {
