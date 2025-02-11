@@ -13,15 +13,15 @@ pipeline {
         }
 
         stage('Build and Test') {
-            steps {
-                script {
-                    sh '''
-                    docker run --rm -v "$PWD":/app -w /app \
-                    maven:3.8.5-openjdk-17 mvn clean package -DskipTests
-                    '''
-                }
-            }
-        }
+		    steps {
+		        script {
+		            sh '''
+		            docker run --rm -v "$PWD":/workspace -w /workspace \
+		            maven:3.8.5-openjdk-17 mvn clean package -DskipTests
+		            '''
+		        }
+		    }
+		}
 
         stage('Build Docker Image') {
             steps {
