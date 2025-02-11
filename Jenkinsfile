@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:latest'
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     environment {
         DOCKER_IMAGE = "mrunal616/e-commerce-fullstack-backend-server"
@@ -19,25 +14,33 @@ pipeline {
 
         stage('Build and Test') {
             steps {
-                sh "mvn clean package -DskipTests"
+                script {
+                    sh 'docker run --rm -v "$PWD":/app -w /app maven:3.8.5-openjdk-17 mvn clean package -DskipTests'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${DOCKER_IMAGE}:latest ."
+                script {
+                    sh "docker build -t ${DOCKER_IMAGE}:latest ."
+                }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                sh "docker push ${DOCKER_IMAGE}:latest"
+                script {
+                    sh "docker push ${DOCKER_IMAGE}:latest"
+                }
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh "kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
+                script {
+                    sh "kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
+                }
             }
         }
     }
