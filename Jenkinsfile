@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'maven:3.8.5-openjdk-17'  // Use a Maven container
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Allows Docker commands
+            image 'docker:latest'
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
@@ -19,36 +19,25 @@ pipeline {
 
         stage('Build and Test') {
             steps {
-                script {
-                    sh 'mvn clean package -DskipTests'  // Build JAR file
-                }
+                sh "mvn clean package -DskipTests"
             }
         }
 
-        stage('Build Docker Image on Host') {
+        stage('Build Docker Image') {
             steps {
-                script {
-                    sh "docker build -t ${DOCKER_IMAGE}:latest ."
-                }
+                sh "docker build -t ${DOCKER_IMAGE}:latest ."
             }
         }
 
-        stage('Push Docker Image to Docker Hub') {
-            environment {
-                registryCredential = 'dockerhublogin'
-            }
+        stage('Push Docker Image') {
             steps {
-                script {
-                    sh "docker push ${DOCKER_IMAGE}:latest"
-                }
+                sh "docker push ${DOCKER_IMAGE}:latest"
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                script {
-                    sh "kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
-                }
+                sh "kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
             }
         }
     }
