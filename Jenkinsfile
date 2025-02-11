@@ -16,13 +16,17 @@ pipeline {
 		    steps {
 		        script {
 		            sh '''
-		            # Debugging: Print current directory and check if pom.xml exists
+		            # Debugging: Print current directory
 		            echo "Current directory: $(pwd)"
-		            ls -la
 		            
-		            # Run Maven inside Docker with absolute path
+		            # Ensure POM exists before running Maven
+		            ls -la $(pwd)
+		            
+		            # Use absolute path for Windows compatibility
+		            WORKSPACE_DIR=$(pwd)
+		            
 		            docker run --rm \
-		            -v "$PWD:/workspace" \
+		            -v "$WORKSPACE_DIR:/workspace" \
 		            -w "/workspace" \
 		            maven:3.8.5-openjdk-17 \
 		            mvn clean package -DskipTests
