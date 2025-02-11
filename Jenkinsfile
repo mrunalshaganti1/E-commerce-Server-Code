@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.8.5-openjdk-17'  // Use a Maven + Java image
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     environment {
         DOCKER_IMAGE = "mrunal616/e-commerce-fullstack-backend-server"
@@ -13,29 +18,15 @@ pipeline {
         }
 
         stage('Build and Test') {
-		    steps {
-		        script {
-		            sh '''
-		            # Print current working directory
-		            echo "Current directory: $(pwd)"
-		
-		            # Ensure the POM file exists
-		            ls -la "$(pwd)"
-		
-		            # Use absolute path and wrap in quotes to handle spaces
-		            WORKSPACE_DIR="$(pwd)"
-		
-		            docker run --rm \
-		            -v "${WORKSPACE_DIR}:/workspace" \
-		            -w "/workspace" \
-		            maven:3.8.5-openjdk-17 \
-		            bash -c "cd /workspace && mvn clean package -DskipTests"
-		            '''
-		        }
-		    }
-		}
+            steps {
+                script {
+                    sh 'mvn clean package -DskipTests'  // Build the JAR file
+                    sh 'mvn test'  // Run tests
+                }
+            }
+        }
 
-        stage('Build Docker Image') {
+        stage('Build Docker Image on Host') {
             steps {
                 script {
                     sh "docker build -t ${DOCKER_IMAGE}:latest ."
@@ -43,7 +34,10 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push Docker Image to Docker Hub') {
+            environment {
+                registryCredential = 'dockerhublogin'
+            }
             steps {
                 script {
                     sh "docker push ${DOCKER_IMAGE}:latest"
