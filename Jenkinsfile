@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-	    docker {
-	        image 'maven:3.8.5-openjdk-17'
-	        args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
-	    }
-	}
+    agent any
 
     environment {
         DOCKER_IMAGE = "mrunal616/e-commerce-fullstack-backend-server"
@@ -18,9 +13,15 @@ pipeline {
         }
 
         stage('Build and Test') {
+            agent {
+                docker {
+                    image 'maven:3.8.5-openjdk-17'
+                    args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 script {
-                    sh 'mvn clean package -DskipTests'  // Build the JAR file
+                    sh 'mvn clean package -DskipTests'
                 }
             }
         }
@@ -28,7 +29,7 @@ pipeline {
         stage('Build Docker Image on Host') {
             steps {
                 script {
-                    sh 'DOCKER_HOST=unix:///var/run/docker.sock docker build -t ${DOCKER_IMAGE}:latest .'
+                    sh "DOCKER_HOST=unix:///var/run/docker.sock docker build -t ${DOCKER_IMAGE}:latest ."
                 }
             }
         }
