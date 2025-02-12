@@ -1,10 +1,10 @@
 pipeline {
     agent {
-        docker {
-            image 'maven:3.8.5-openjdk-17'  // Use a Maven + Java image
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+	    docker {
+	        image 'maven:3.8.5-openjdk-17'
+	        args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+	    }
+	}
 
     environment {
         DOCKER_IMAGE = "mrunal616/e-commerce-fullstack-backend-server"
