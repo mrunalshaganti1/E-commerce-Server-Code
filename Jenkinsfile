@@ -17,6 +17,16 @@ pipeline {
             }
         }
 
+        stage('Test Docker Access') {
+            steps {
+                script {
+                    sh 'docker --version'
+                    sh 'docker ps'
+                }
+            }
+        }
+    
+
         stage('Build and Test') {
             steps {
                 script {
@@ -25,6 +35,7 @@ pipeline {
                 }
             }
         }
+        
 
         stage('Build Docker Image on Host') {
             steps {
