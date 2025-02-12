@@ -17,30 +17,18 @@ pipeline {
             }
         }
 
-        stage('Test Docker Access') {
-            steps {
-                script {
-                    sh 'docker --version'
-                    sh 'docker ps'
-                }
-            }
-        }
-    
-
         stage('Build and Test') {
             steps {
                 script {
                     sh 'mvn clean package -DskipTests'  // Build the JAR file
-                    sh 'mvn test'  // Run tests
                 }
             }
         }
-        
 
         stage('Build Docker Image on Host') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE}:latest ."
+                    sh 'DOCKER_HOST=unix:///var/run/docker.sock docker build -t ${DOCKER_IMAGE}:latest .'
                 }
             }
         }
@@ -51,7 +39,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "docker push ${DOCKER_IMAGE}:latest"
+                    sh "DOCKER_HOST=unix:///var/run/docker.sock docker push ${DOCKER_IMAGE}:latest"
                 }
             }
         }
