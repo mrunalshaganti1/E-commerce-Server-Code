@@ -30,7 +30,6 @@ pipeline {
         stage('Build Docker Image on Host') {
             steps {
                 script {
-                	sh "mkdir -p docker-build && cp target/*.jar docker-build/"
                     sh "DOCKER_HOST=unix:///var/run/docker.sock docker build -t ${DOCKER_IMAGE}:latest ."
                 }
             }
