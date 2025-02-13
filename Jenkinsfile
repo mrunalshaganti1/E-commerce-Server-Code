@@ -46,11 +46,19 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    sh "kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
-                }
-            }
-        }
+		    steps {
+		        script {
+		            sh "sudo kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
+		        }
+		    }
+		}
+		stage('Apply Kubernetes Deployment') {
+		    steps {
+		        script {
+		            sh "kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'"
+		        }
+		    }
+		}
+		
     }
 }
