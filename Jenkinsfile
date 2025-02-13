@@ -21,7 +21,8 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'docker run --rm -v $PWD:/app -w /app maven:3.8.5-openjdk-17 mvn clean package -DskipTests'
+                    sh 'mvn clean package -DskipTests'
+                    sh 'ls -la target'  // Ensure JAR file is created
                 }
             }
         }
@@ -29,6 +30,7 @@ pipeline {
         stage('Build Docker Image on Host') {
             steps {
                 script {
+                	sh "mkdir -p docker-build && cp target/*.jar docker-build/"
                     sh "DOCKER_HOST=unix:///var/run/docker.sock docker build -t ${DOCKER_IMAGE}:latest ."
                 }
             }
