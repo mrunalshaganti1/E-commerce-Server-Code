@@ -21,8 +21,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'mvn clean install -DskipTests'
-                    sh 'ls -la target'  // Ensure JAR file is created
+                    sh 'docker run --rm -v $PWD:/app -w /app maven:3.8.5-openjdk-17 mvn clean package -DskipTests'
                 }
             }
         }
