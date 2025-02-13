@@ -47,11 +47,23 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    sh "kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
-                }
-            }
+    steps {
+        script {
+            sh """
+                export KUBECONFIG=/root/.kube/config
+                
+                echo "🚀 Applying Kubernetes deployment and service..."
+                kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'  # Ensure Deployment & Service exist
+                
+                echo "🔄 Updating backend image..."
+                kubectl set image deployment/backend-deployment server=${DOCKER_IMAGE}:latest --record  # Dynamically update image
+                
+                echo "✅ Verifying deployment..."
+                kubectl rollout status deployment/backend-deployment
+            """
         }
+    }
+}
+
     }
 }
