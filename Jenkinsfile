@@ -51,6 +51,11 @@ pipeline {
         script {
             sh """
                 export KUBECONFIG=/root/.kube/config
+                
+                echo "🚀 Fixing Kubernetes paths..."
+                sed -i 's|C:\\\\Users\\\\Mruna\\\\.minikube|/root/.minikube|g' /root/.kube/config
+                sed -i 's|\\\\|/|g' /root/.kube/config  # Convert Windows backslashes to Linux forward slashes
+
 
                 echo "🚀 Applying Kubernetes deployment and service..."
                 kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'
