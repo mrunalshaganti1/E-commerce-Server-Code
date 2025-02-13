@@ -48,8 +48,9 @@ pipeline {
         stage('Deploy to Kubernetes') {
 		    steps {
 		        script {
-		            sh "chmod +x /usr/local/bin/kubectl"
-            		sh "kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
+		            sh "chmod +x /usr/local/bin/kubectl"  // Ensure `kubectl` is executable
+		            sh "kubectl version --client"  // Check if `kubectl` works
+		            sh "kubectl set image deployment/backend-deployment backend=${DOCKER_IMAGE}:latest"
 		        }
 		    }
 		}
