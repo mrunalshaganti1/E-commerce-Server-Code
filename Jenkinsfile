@@ -21,7 +21,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'mvn clean package -DskipTests'
+                    sh 'mvn clean install -DskipTests'
                     sh 'ls -la target'  // Ensure JAR file is created
                 }
             }
