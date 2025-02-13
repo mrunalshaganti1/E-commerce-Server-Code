@@ -56,7 +56,9 @@ pipeline {
                 sed -i 's|C:\\\\Users\\\\Mruna\\\\.minikube|/root/.minikube|g' /root/.kube/config
                 sed -i 's|\\\\|/|g' /root/.kube/config  # Convert Windows backslashes to Linux forward slashes
 
-
+				echo "🚀 Applying Kubernetes deployment and service..."
+				kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml'
+				
                 echo "🚀 Applying Kubernetes deployment and service..."
                 kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'
 
