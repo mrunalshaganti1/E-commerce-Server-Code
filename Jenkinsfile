@@ -54,15 +54,13 @@ pipeline {
                 
                 echo "🚀 Fixing Kubernetes paths..."
                 sed -i 's|C:\\\\Users\\\\Mruna\\\\.minikube|/root/.minikube|g' /root/.kube/config
-
+                sed -i 's|\\\\|/|g' /root/.kube/config  # Convert Windows backslashes to Linux forward slashes
+                
                 echo "🔄 Switching to Minikube context..."
                 kubectl config use-context minikube
 
                 echo "🚀 Applying Kubernetes deployment and service..."
                 kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'
-
-                echo "🔄 Updating backend image..."
-                kubectl set image deployment/backend-deployment server=${DOCKER_IMAGE}:latest --record
 
                 echo "✅ Verifying deployment..."
                 kubectl rollout status deployment/backend-deployment
