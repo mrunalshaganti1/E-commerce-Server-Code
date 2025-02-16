@@ -48,7 +48,7 @@ pipeline {
         
         stage('Trivy Check'){
         	steps{
-        		sh "trivy ${DOCKER_IMAGE}:latest"
+        		sh "trivy image --format table -o trivy-scan-report.txt ${DOCKER_IMAGE}:latest"
         	}
         }
 
