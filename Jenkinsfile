@@ -45,6 +45,12 @@ pipeline {
                 }
             }
         }
+        
+        stage('Trivy Check'){
+        	steps{
+        		sh "trivy ${DOCKER_IMAGE}:latest"
+        	}
+        }
 
         stage('Push Docker Image to Docker Hub') {
             environment {
