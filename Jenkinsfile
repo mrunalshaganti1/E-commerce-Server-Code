@@ -26,6 +26,17 @@ pipeline {
                 }
             }
         }
+        
+        stage('SonarQube Analysis'){
+        	steps{
+        		withSonarQubeEnv('SonarQube'){
+        			sh "mvn clean verify sonar:sonar \
+						  -Dsonar.projectKey=FullStackBackEndCodeCheck \
+						  -Dsonar.host.url=http://host.docker.internal:9000 \
+						  -Dsonar.login=sqp_c1e52e1922a9a249ed38f14489b785d56055d5a7"
+        		}
+        	}
+        }
 
         stage('Build Docker Image on Host') {
             steps {
