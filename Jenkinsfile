@@ -68,23 +68,26 @@ pipeline {
         script {
             sh """
                 export KUBECONFIG=/root/.kube/config
-                
-                echo "🚀 Fixing Kubernetes paths..."
-                sed -i 's|C:\\\\Users\\\\Mruna\\\\.minikube|/root/.minikube|g' /root/.kube/config
-                sed -i 's|\\\\|/|g' /root/.kube/config  # Convert Windows backslashes to Linux forward slashes
 
-				echo "🚀 Applying Kubernetes deployment and service..."
-				kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml'
-				
-                echo "🚀 Applying Kubernetes deployment and service..."
+                echo "🚀 Setting Kubernetes Context..."
+                kubectl config use-context docker-desktop || { echo "❌ ERROR: Unable to switch context!"; exit 1; }
+
+                echo "🚀 Verifying Kubernetes Connection..."
+                kubectl cluster-info || { echo "❌ ERROR: Unable to connect to Kubernetes!"; exit 1; }
+
+                echo "🚀 Deploying MySQL..."
+                kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml'
+
+                echo "🚀 Deploying Backend..."
                 kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'
 
-                echo "✅ Verifying deployment..."
+                echo "✅ Verifying Deployment..."
                 kubectl rollout status deployment/backend-deployment
             """
         }
     }
 }
+
 
 
     }
