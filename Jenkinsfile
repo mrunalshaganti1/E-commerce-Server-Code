@@ -64,28 +64,35 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-		    steps {
-		        script {
-		            sh """
-		                export KUBECONFIG=/root/.kube/config
-		
-		                echo "🚀 Fixing Kubernetes paths..."
-		                sed -i 's|\\\\|/|g' /root/.kube/config  # Convert Windows backslashes to Linux forward slashes
-		                sed -i 's|desktop-control-plane|host.docker.internal|g' /root/.kube/config
-		
-		                echo "✅ Checking Kubernetes API connection..."
-		                kubectl cluster-info || { echo "❌ Kubernetes is unreachable!"; exit 1; }
-		
-		                echo "🚀 Applying Kubernetes deployment and service..."
-		                kubectl apply -f 'Kubernetes Files/'
-		
-		                echo "⏳ Waiting for deployment to stabilize..."
-		                sleep 5
-		                kubectl rollout status deployment/backend-deployment
-		            """
-		        }
-		    }
-		}
+    steps {
+        script {
+            sh """
+                export KUBECONFIG=/root/.kube/config
+
+                echo "🚀 Fixing Kubernetes paths..."
+                sed -i 's|\\\\|/|g' /root/.kube/config  # Convert Windows backslashes to Linux forward slashes
+                
+                echo "🔍 Checking Kubernetes API URL..."
+                KUBE_SERVER=\$(kubectl config view --minify -o jsonpath="{.clusters[0].cluster.server}")
+                echo "✅ Kubernetes API Server: \$KUBE_SERVER"
+
+                echo "🔄 Updating KubeConfig to Use host.docker.internal..."
+                sed -i 's|https://127.0.0.1:[0-9]*|https://host.docker.internal:51820|g' /root/.kube/config
+
+                echo "✅ Checking Kubernetes API connection..."
+                kubectl cluster-info || { echo "❌ Kubernetes is unreachable!"; exit 1; }
+
+                echo "🚀 Applying Kubernetes deployment and service..."
+                kubectl apply -f 'Kubernetes Files/'
+
+                echo "⏳ Waiting for deployment to stabilize..."
+                sleep 5
+                kubectl rollout status deployment/backend-deployment
+            """
+        }
+    }
+}
+
 
     }
 }
