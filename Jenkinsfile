@@ -70,7 +70,6 @@ pipeline {
 		                export KUBECONFIG=/root/.kube/config
 		
 		                echo "🚀 Fixing Kubernetes paths..."
-		                sed -i 's|C:\\\\Users\\\\Mruna\\\\.minikube|/root/.minikube|g' /root/.kube/config
 		                sed -i 's|\\\\|/|g' /root/.kube/config  # Convert Windows backslashes to Linux forward slashes
 		                sed -i 's|desktop-control-plane|host.docker.internal|g' /root/.kube/config
 		
