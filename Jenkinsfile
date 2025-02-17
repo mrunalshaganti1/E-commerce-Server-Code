@@ -69,6 +69,10 @@ pipeline {
             sh """
                 export KUBECONFIG=/root/.kube/config
                 
+                echo "🚀 Fixing Kubernetes Config..."
+                sed -i 's|host.docker.internal|127.0.0.1|g' /root/.kube/config
+                sed -i 's|https://.*|https://127.0.0.1:56037|g' /root/.kube/config
+                
                 echo "🚀 Checking Kubernetes connection..."
                 kubectl cluster-info
                 
@@ -84,6 +88,7 @@ pipeline {
         }
     }
 }
+
 
 
 
