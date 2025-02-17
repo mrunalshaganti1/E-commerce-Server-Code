@@ -65,29 +65,20 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
     steps {
-        withCredentials([file(credentialsId: 'kubernetes', variable: 'KUBECONFIG')]) {
+        withCredentials([string(credentialsId: 'kubernetes-token', variable: 'KUBE_TOKEN')]) {
             script {
                 sh """
-                    export KUBECONFIG=${KUBECONFIG}
-                    
-                    echo "🚀 Fixing Kubernetes paths..."
-                    sed -i 's|C:\\\\Users\\\\Mruna\\\\.minikube|/root/.minikube|g' ${KUBECONFIG}
-                    sed -i 's|\\\\|/|g' ${KUBECONFIG}  # Convert Windows paths to Linux
-
-                    echo "🔍 Checking Kubernetes API..."
-                    kubectl cluster-info
-
-                    echo "🚀 Applying Kubernetes deployment and service..."
-                    kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml'
-                    kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'
-
-                    echo "✅ Verifying deployment..."
-                    kubectl rollout status deployment/backend-deployment
+                    export KUBECONFIG=/root/.kube/config
+                    kubectl cluster-info --token=$KUBE_TOKEN
+                    kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml' --token=$KUBE_TOKEN
+                    kubectl apply -f 'Kubernetes Files/backend-deployment.yaml' --token=$KUBE_TOKEN
+                    kubectl rollout status deployment/backend-deployment --token=$KUBE_TOKEN
                 """
             }
         }
     }
 }
+
 
 
     }
