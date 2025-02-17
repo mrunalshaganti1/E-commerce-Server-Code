@@ -65,19 +65,26 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
     steps {
-        withCredentials([string(credentialsId: 'kubernetes-token', variable: 'KUBE_TOKEN')]) {
-            script {
-                sh """
-                    export KUBECONFIG=/root/.kube/config
-                    kubectl cluster-info --token=$KUBE_TOKEN
-                    kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml' --token=$KUBE_TOKEN
-                    kubectl apply -f 'Kubernetes Files/backend-deployment.yaml' --token=$KUBE_TOKEN
-                    kubectl rollout status deployment/backend-deployment --token=$KUBE_TOKEN
-                """
-            }
+        script {
+            sh """
+                export KUBECONFIG=/root/.kube/config
+                
+                echo "🚀 Checking Kubernetes connection..."
+                kubectl cluster-info
+                
+                echo "🚀 Deploying MySQL..."
+                kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml'
+                
+                echo "🚀 Deploying Backend..."
+                kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'
+                
+                echo "✅ Verifying deployment..."
+                kubectl rollout status deployment/backend-deployment
+            """
         }
     }
 }
+
 
 
 
