@@ -68,26 +68,27 @@ pipeline {
         script {
             sh """
                 export KUBECONFIG=/root/.kube/config
-                
+
                 echo "🚀 Fixing Kubernetes Config..."
-                sed -i 's|host.docker.internal|127.0.0.1|g' /root/.kube/config
-                sed -i 's|https://.*|https://127.0.0.1:56037|g' /root/.kube/config
-                
+                API_SERVER=\$(kubectl config view --minify -o jsonpath="{.clusters[0].cluster.server}")
+                sed -i 's|https://.*|'\$API_SERVER'|g' /root/.kube/config
+
                 echo "🚀 Checking Kubernetes connection..."
                 kubectl cluster-info
-                
+
                 echo "🚀 Deploying MySQL..."
                 kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml'
-                
+
                 echo "🚀 Deploying Backend..."
                 kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'
-                
+
                 echo "✅ Verifying deployment..."
                 kubectl rollout status deployment/backend-deployment
             """
         }
     }
 }
+
 
 
 
