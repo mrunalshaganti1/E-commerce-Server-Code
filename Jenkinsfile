@@ -68,18 +68,15 @@ pipeline {
         script {
             sh """
                 export KUBECONFIG=/root/.kube/config
+                
+                echo "🚀 Fixing Kubernetes paths..."
+                sed -i 's|C:\\\\Users\\\\Mruna\\\\.minikube|/root/.minikube|g' /root/.kube/config
+                sed -i 's|\\\\|/|g' /root/.kube/config  # Convert Windows backslashes to Linux forward slashes
 
-                echo "🚀 Fixing Kubernetes Config..."
-                API_SERVER=\$(kubectl config view --minify -o jsonpath="{.clusters[0].cluster.server}")
-                sed -i 's|https://.*|'\$API_SERVER'|g' /root/.kube/config
-
-                echo "🚀 Checking Kubernetes connection..."
-                kubectl cluster-info
-
-                echo "🚀 Deploying MySQL..."
-                kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml'
-
-                echo "🚀 Deploying Backend..."
+				echo "🚀 Applying Kubernetes deployment and service..."
+				kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml'
+				
+                echo "🚀 Applying Kubernetes deployment and service..."
                 kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'
 
                 echo "✅ Verifying deployment..."
@@ -88,10 +85,6 @@ pipeline {
         }
     }
 }
-
-
-
-
 
 
     }
