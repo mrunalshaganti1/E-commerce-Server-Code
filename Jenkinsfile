@@ -64,28 +64,29 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-    steps {
-        script {
-            sh """
-                export KUBECONFIG=/root/.kube/config
-                
-                echo "🚀 Fixing Kubernetes paths..."
-                sed -i 's|C:\\\\Users\\\\Mruna\\\\.minikube|/root/.minikube|g' /root/.kube/config
-                sed -i 's|\\\\|/|g' /root/.kube/config  # Convert Windows backslashes to Linux forward slashes
-
-				echo "🚀 Applying Kubernetes deployment and service..."
-				kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml'
-				
-                echo "🚀 Applying Kubernetes deployment and service..."
-                kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'
-
-                echo "✅ Verifying deployment..."
-                kubectl rollout status deployment/backend-deployment
-            """
-        }
-    }
-}
-
+		    steps {
+		        script {
+		            sh """
+		                export KUBECONFIG=/root/.kube/config
+		
+		                echo "🚀 Fixing Kubernetes paths..."
+		                sed -i 's|C:\\\\Users\\\\Mruna\\\\.minikube|/root/.minikube|g' /root/.kube/config
+		                sed -i 's|\\\\|/|g' /root/.kube/config  # Convert Windows backslashes to Linux forward slashes
+		                sed -i 's|desktop-control-plane|host.docker.internal|g' /root/.kube/config
+		
+		                echo "✅ Checking Kubernetes API connection..."
+		                kubectl cluster-info || { echo "❌ Kubernetes is unreachable!"; exit 1; }
+		
+		                echo "🚀 Applying Kubernetes deployment and service..."
+		                kubectl apply -f 'Kubernetes Files/'
+		
+		                echo "⏳ Waiting for deployment to stabilize..."
+		                sleep 5
+		                kubectl rollout status deployment/backend-deployment
+		            """
+		        }
+		    }
+		}
 
     }
 }
