@@ -64,29 +64,29 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-    steps {
-        script {
-            sh """
-                export KUBECONFIG=/root/.kube/config
-
-                echo "🚀 Setting Kubernetes Context..."
-                kubectl config use-context docker-desktop || { echo "❌ ERROR: Unable to switch context!"; exit 1; }
-
-                echo "🚀 Verifying Kubernetes Connection..."
-                kubectl cluster-info || { echo "❌ ERROR: Unable to connect to Kubernetes!"; exit 1; }
-
-                echo "🚀 Deploying MySQL..."
-                kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml'
-
-                echo "🚀 Deploying Backend..."
-                kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'
-
-                echo "✅ Verifying Deployment..."
-                kubectl rollout status deployment/backend-deployment
-            """
-        }
-    }
-}
+		    steps {
+		        script {
+		            sh """
+		                export KUBECONFIG=/root/.kube/config
+		
+		                echo "🚀 Setting Kubernetes Context..."
+		                kubectl config use-context docker-desktop || { echo "❌ ERROR: Unable to switch context!"; exit 1; }
+		
+		                echo "🚀 Verifying Kubernetes Connection..."
+		                kubectl cluster-info || { echo "❌ ERROR: Unable to connect to Kubernetes!"; exit 1; }
+		
+		                echo "🚀 Deploying MySQL..."
+		                kubectl apply -f 'Kubernetes Files/mysql-deployment.yaml'
+		
+		                echo "🚀 Deploying Backend..."
+		                kubectl apply -f 'Kubernetes Files/backend-deployment.yaml'
+		
+		                echo "✅ Verifying Deployment..."
+		                kubectl rollout status deployment/backend-deployment
+		            """
+		        }
+		    }
+		}
 
 
 
