@@ -32,7 +32,7 @@ pipeline {
         		script{
         			sh """
 		                mkdir -p dependency-check-reports
-		                /usr/local/bin/dependency-check --scan ./ --out dependency-check-reports --format HTML,XML
+		                dependency-check --scan ./ --out dependency-check-reports --format HTML --format XML
 		            """
         		}
         	}
