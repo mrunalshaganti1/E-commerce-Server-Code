@@ -31,9 +31,9 @@ pipeline {
         	steps{
         		script{
         			sh """
-        				echo "Running OWASP Dependency Check"
-        				dependencyCheckAnalyzer datadir: '', isautoupdate: true, outdir: 'dependency-check-reports', scanpath: './' 
-        			   """
+		                mkdir -p dependency-check-reports
+		                /usr/local/bin/dependency-check --scan ./ --out dependency-check-reports --format HTML,XML
+		            """
         		}
         	}
         }
