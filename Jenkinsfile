@@ -27,6 +27,18 @@ pipeline {
             }
         }
         
+        stage('Dependency Check'){
+        	steps{
+        		script{
+        			sh """
+        				echo "Running OWASP Dependency Check"
+        				mkdir -p dependency-check-reports
+        				dependency-check.sh --scan ./ --out dependency-check-reports --format HTML,XML 
+        			   """
+        		}
+        	}
+        }
+        
         stage('SonarQube Analysis'){
         	steps{
         		withSonarQubeEnv('SonarQube'){
