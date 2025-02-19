@@ -32,8 +32,7 @@ pipeline {
         		script{
         			sh """
         				echo "Running OWASP Dependency Check"
-        				mkdir -p dependency-check-reports
-        				dependency-check.sh --scan ./ --out dependency-check-reports --format HTML,XML 
+        				dependencyCheck additionalArguments: '--format HTML', odcInstallation: 'owasp-dependency-check' 
         			   """
         		}
         	}
