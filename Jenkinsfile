@@ -32,7 +32,7 @@ pipeline {
         		script{
         			sh """
         				echo "Running OWASP Dependency Check"
-        				dependencyCheck additionalArguments: '--format HTML', odcInstallation: 'owasp-dependency-check' 
+        				dependencyCheckAnalyzer datadir: '', isautoupdate: true, outdir: 'dependency-check-reports', scanpath: './' 
         			   """
         		}
         	}
