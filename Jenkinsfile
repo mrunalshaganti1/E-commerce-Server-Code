@@ -30,12 +30,8 @@ pipeline {
         stage('Dependency Check'){
         	steps{
         		script{
-        			withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
-                        sh '''
-                            mkdir -p dependency-check-reports
-                            dependency-check --scan ./ --out dependency-check-reports --format HTML --format XML --nvdApiKey="$NVD_API_KEY"
-                        '''
-                    }
+        			dependencyCheck additionalArguments: '--format HTML', odcInstallation: 'owasp-dependency-check'
+        			dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
         		}
         	}
         }
