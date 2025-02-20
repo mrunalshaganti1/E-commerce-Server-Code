@@ -30,10 +30,12 @@ pipeline {
         stage('Dependency Check'){
         	steps{
         		script{
-        			sh """
-		                mkdir -p dependency-check-reports
-		                dependency-check --scan ./ --out dependency-check-reports --format HTML --format XML --noupdate
-		            """
+        			withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
+                        sh '''
+                            mkdir -p dependency-check-reports
+                            dependency-check --scan ./ --out dependency-check-reports --format HTML --format XML --nvdApiKey="$NVD_API_KEY"
+                        '''
+                    }
         		}
         	}
         }
